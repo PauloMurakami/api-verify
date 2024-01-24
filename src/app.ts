@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 const app = express();
 const port = 8092;
+import https from 'https'
 const fileNameDB = 'output.json';
 app.use(express.json());
 
@@ -62,6 +63,10 @@ app.listen(port, () => {
 export async function verificaUrls() {
     let servicesOpen = [];
     let servicesClose = [];
+    const httpsAgent = new https.Agent({
+        rejectUnauthorized: false,
+    })
+    axios.defaults.httpsAgent = httpsAgent
     for (const url of await getUrls(fileNameDB)) {
         await axios.get(url.url).then((response) => {
             servicesOpen.push(url)
